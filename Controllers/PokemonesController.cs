@@ -130,9 +130,9 @@ namespace PokedexMalHecho.Controllers
             {
                 return NotFound();
             }
-            /*ViewData["Region"] = new SelectList(_context.Regiones, "Id", "Nombre", pokemones.Region);
+            ViewData["Region"] = new SelectList(_context.Regiones, "Id", "Nombre", pokemones.Region);
             ViewData["Tipo1"] = new SelectList(_context.Tipos, "Id", "Nombre", pokemones.Tipo1);
-            ViewData["Tipo2"] = new SelectList(_context.Tipos, "Id", "Nombre", pokemones.Tipo2);*/
+            ViewData["Tipo2"] = new SelectList(_context.Tipos, "Id", "Nombre", pokemones.Tipo2);
 
             var pokemonesDTO = new PokemonesDTO()
             {

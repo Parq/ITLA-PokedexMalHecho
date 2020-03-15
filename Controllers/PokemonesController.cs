@@ -6,21 +6,38 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PokedexMalHecho.Models;
+using PokedexMalHecho.DTO;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
+using AutoMapper;
+using Microsoft.Extensions.FileProviders;
 
 namespace PokedexMalHecho.Controllers
 {
     public class PokemonesController : Controller
     {
         private readonly PokedexMalHechoContext _context;
+        private readonly IHostingEnvironment hostingEnvironment;
+        //private readonly IMapper _mapper;
 
-        public PokemonesController(PokedexMalHechoContext context)
+        public PokemonesController(PokedexMalHechoContext context, IHostingEnvironment hostingEnvironment/*, IMapper mapper*/)
         {
             _context = context;
+            this.hostingEnvironment = hostingEnvironment;
+            //this._mapper = mapper;
         }
 
         // GET: Pokemones
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(/*string nombrePokemon = null*/)
         {
+            /*var pokemonList = _context.Pokemones.AsQueryable();
+            if (!string.IsNullOrEmpty(nombrePokemon))
+            {
+                pokemonList = _context.Pokemones.Where(x => x.Nombre.Contains(nombrePokemon));
+            }
+            var list = await pokemonList.ToListAsync();
+            return View(list);*/
+
             var pokedexMalHechoContext = _context.Pokemones.Include(p => p.RegionNavigation).Include(p => p.Tipo1Navigation).Include(p => p.Tipo2Navigation);
             return View(await pokedexMalHechoContext.ToListAsync());
         }
@@ -58,18 +75,46 @@ namespace PokedexMalHecho.Controllers
         // POST: Pokemones/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Tipo1,Tipo2,Region,Ataque1,Ataque2,Ataque3,Ataque4")] Pokemones pokemones)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Tipo1,Tipo2,Region,Ataque1,Ataque2,Ataque3,Ataque4,Photo")] PokemonesDTO DTO)
+        //public async Task<IActionResult> Create(PokemonesDTO DTO)
+        //public IActionResult Create(PokemonesDTO DTO)
         {
+            //var pokemon = new Pokemones();
             if (ModelState.IsValid)
             {
-                _context.Add(pokemones);
+                string uniqueFileName = null;
+                if(DTO.Photo != null)
+                {
+                    string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
+                    uniqueFileName = Guid.NewGuid().ToString() + "_" + DTO.Photo.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    DTO.Photo.CopyTo(new FileStream(filePath, FileMode.Create));
+                    //if (filePath != null) DTO.Photo.CopyTo(new FileStream(filePath, mode: FileMode.Create));
+                }
+
+                //pokemon = _mapper.Map<Pokemones>(DTO);
+                //pokemon.Photo = uniqueFileName;
+                Pokemones newPokemon = new Pokemones
+                {
+                    Id = DTO.Id,
+                    Nombre = DTO.Nombre,
+                    Tipo1 = DTO.Tipo1,
+                    Tipo2 = DTO.Tipo2,
+                    Region = DTO.Region,
+                    Ataque1=DTO.Ataque1,
+                    Ataque2=DTO.Ataque2,
+                    Ataque3=DTO.Ataque3,
+                    Ataque4=DTO.Ataque4,
+                    Photo=uniqueFileName
+                };
+                _context.Add(newPokemon);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(/*nameof(Index)*/ "index",new { id = newPokemon.Id});
             }
-            ViewData["Region"] = new SelectList(_context.Regiones, "Id", "Nombre", pokemones.Region);
+            /*ViewData["Region"] = new SelectList(_context.Regiones, "Id", "Nombre", pokemones.Region);
             ViewData["Tipo1"] = new SelectList(_context.Tipos, "Id", "Nombre", pokemones.Tipo1);
-            ViewData["Tipo2"] = new SelectList(_context.Tipos, "Id", "Nombre", pokemones.Tipo2);
-            return View(pokemones);
+            ViewData["Tipo2"] = new SelectList(_context.Tipos, "Id", "Nombre", pokemones.Tipo2);*/
+            return View(/*DTOpokemones*/);
         }
 
         // GET: Pokemones/Edit/5
@@ -88,6 +133,7 @@ namespace PokedexMalHecho.Controllers
             ViewData["Region"] = new SelectList(_context.Regiones, "Id", "Nombre", pokemones.Region);
             ViewData["Tipo1"] = new SelectList(_context.Tipos, "Id", "Nombre", pokemones.Tipo1);
             ViewData["Tipo2"] = new SelectList(_context.Tipos, "Id", "Nombre", pokemones.Tipo2);
+
             return View(pokemones);
         }
 

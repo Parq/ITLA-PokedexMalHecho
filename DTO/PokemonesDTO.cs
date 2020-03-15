@@ -11,23 +11,23 @@ namespace PokedexMalHecho.DTO
     public class PokemonesDTO
     {
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Campo Requerido")]
         [StringLength(50)]
         public string Nombre { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Campo Requerido")]
         public int Tipo1 { get; set; }
         public int? Tipo2 { get; set; }
+        [Required(ErrorMessage = "Campo Requerido")]
         public int Region { get; set; }
-        [Required]
-        [StringLength(15)]
+        [Required(ErrorMessage = "Campo Requerido")]
+        [StringLength(50)]
         public string Ataque1 { get; set; }
-        [StringLength(15)]
+        [StringLength(50)]
         public string Ataque2 { get; set; }
-        [StringLength(15)]
+        [StringLength(50)]
         public string Ataque3 { get; set; }
-        [StringLength(15)]
+        [StringLength(50)]
         public string Ataque4 { get; set; }
-        [StringLength(100)]
         public IFormFile Photo { get; set; }
     }
 }

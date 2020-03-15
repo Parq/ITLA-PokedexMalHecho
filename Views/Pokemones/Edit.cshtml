@@ -1,4 +1,4 @@
-﻿@model PokedexMalHecho.Models.Pokemones
+﻿@model PokedexMalHecho.DTO.PokemonesDTO
 
 @{
     ViewData["Title"] = "Edición Pokemon";
@@ -31,7 +31,7 @@
                     <span asp-validation-for="Tipo2" class="text-danger"></span>
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label asp-for="Region" class="control-label">Región</label>
                 <select asp-for="Region" class="form-control" asp-items="ViewBag.Region"></select>
@@ -50,7 +50,7 @@
                     <span asp-validation-for="Ataque2" class="text-danger"></span>
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col">
                     <label asp-for="Ataque3" class="control-label">Ataque 3:</label>
@@ -63,7 +63,17 @@
                     <span asp-validation-for="Ataque4" class="text-danger"></span>
                 </div>
             </div>
-            
+
+            <div class="form-group">
+                <label asp-for="Photo" class="control-label">Archivo Foto:</label>
+                <div class="col">
+                    <div class="custom-file">
+                        <input asp-for="Photo" class="form-control custom-file-input" />
+                        <label class="custom-file-label">Escoger archivo</label>
+                    </div>
+                </div>
+            </div>
+
             <div class="row" style="margin-top:20px">
                 <div class="col">
                     <input type="submit" value="Guardar" class="btn btn-primary" /> |
@@ -75,5 +85,13 @@
 </div>
 
 @section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.custom-file-input').on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).next('.custom-file-label').html(fileName);
+            });
+        });
+    </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

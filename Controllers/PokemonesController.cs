@@ -170,11 +170,11 @@ namespace PokedexMalHecho.Controllers
                     string uniqueName = null;
                     if (dTO.Photo != null)
                     {
-                        var folderPath = Path.Combine(hostingEnvironment.WebRootPath, "images");
+                        string folderPath = Path.Combine(hostingEnvironment.WebRootPath, "images");
                         uniqueName = Guid.NewGuid().ToString() + "_" + dTO.Photo.FileName;
-                        var filePath = Path.Combine(folderPath, uniqueName);
+                        string filePath = Path.Combine(folderPath, uniqueName);
 
-                        var filePathDelete = Path.Combine(folderPath, pokemon.Photo);
+                        string filePathDelete = Path.Combine(folderPath, pokemon.Photo);
 
                         if (!string.IsNullOrEmpty(pokemon.Photo))
                         {

@@ -154,13 +154,67 @@ namespace PokedexMalHecho.Controllers
         // POST: Pokemones/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Tipo1,Tipo2,Region,Ataque1,Ataque2,Ataque3,Ataque4")] Pokemones pokemones)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Tipo1,Tipo2,Region,Ataque1,Ataque2,Ataque3,Ataque4,Photo")] /*Pokemones pokemones*/ PokemonesDTO dTO)
         {
-            if (id != pokemones.Id)
+            if (id != dTO.Id)
             {
                 return NotFound();
             }
 
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var pokemon = await _context.Pokemones.FirstOrDefaultAsync(d => d.Id == dTO.Id);
+
+                    string uniqueName = null;
+                    if (dTO.Photo != null)
+                    {
+                        var folderPath = Path.Combine(hostingEnvironment.WebRootPath, "images");
+                        uniqueName = Guid.NewGuid().ToString() + "_" + dTO.Photo.FileName;
+                        var filePath = Path.Combine(folderPath, uniqueName);
+
+                        var filePathDelete = Path.Combine(folderPath, pokemon.Photo);
+
+                        if (!string.IsNullOrEmpty(pokemon.Photo))
+                        {
+                            if (System.IO.File.Exists(filePathDelete))
+                            {
+                                var fileInfo = new System.IO.FileInfo(filePathDelete);
+                                fileInfo.Delete();
+                            }
+                        }
+                        if (filePath != null) dTO.Photo.CopyTo(new FileStream(filePath, mode: FileMode.Create));
+                    }
+                    pokemon.Id = dTO.Id;
+                    pokemon.Region = dTO.Region;
+                    pokemon.Tipo1 = dTO.Tipo1;
+                    pokemon.Tipo2 = dTO.Tipo2;
+                    pokemon.Ataque1 = dTO.Ataque1;
+                    pokemon.Ataque2 = dTO.Ataque2;
+                    pokemon.Ataque3 = dTO.Ataque3;
+                    pokemon.Ataque4 = dTO.Ataque4;
+                    pokemon.Photo = uniqueName;
+
+                    _context.Update(pokemon);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!PokemonesExists(dTO.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(dTO);
+
+            /*
             if (ModelState.IsValid)
             {
                 try
@@ -184,7 +238,7 @@ namespace PokedexMalHecho.Controllers
             ViewData["Region"] = new SelectList(_context.Regiones, "Id", "Nombre", pokemones.Region);
             ViewData["Tipo1"] = new SelectList(_context.Tipos, "Id", "Nombre", pokemones.Tipo1);
             ViewData["Tipo2"] = new SelectList(_context.Tipos, "Id", "Nombre", pokemones.Tipo2);
-            return View(pokemones);
+            return View(pokemones);*/
         }
 
         // GET: Pokemones/Delete/5

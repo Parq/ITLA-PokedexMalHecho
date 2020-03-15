@@ -1,0 +1,35 @@
+﻿@{ 
+    ViewData["Title"] = "Inicio";
+}
+
+    <div class="card-deck">
+        <div class="card" style="width: 18rem">
+            <div class="card-body">
+                <h4 class="card-title">Pokemones</h4>
+                <p class="card-text">Listado de pokemones registrados. Administración de creaturas.</p>
+            </div>
+            <div class="card-footer text-center">
+                <a href="@Url.Action("Index","Pokemones")" class="btn btn-primary">Listado</a>
+            </div>
+        </div>
+
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h4 class="card-title">Regiones</h4>
+                <p class="card-text">Administración de regiones</p>
+            </div>
+            <div class="card-footer text-center">
+                <a href="@Url.Action("Index","Regiones")" class="btn btn-primary">Listado</a>
+            </div>
+        </div>
+
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h4 class="card-title">Tipos</h4>
+                <p class="card-text">Administración de tipos de pokemones y poderes.</p>
+            </div>
+            <div class="card-footer text-center">
+                <a href="@Url.Action("Index","Tipos")" class="btn btn-primary">Listado</a>
+            </div>
+        </div>
+    </div>

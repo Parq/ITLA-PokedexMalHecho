@@ -1,0 +1,54 @@
+﻿@model IEnumerable<PokedexMalHecho.Models.Pokemones>
+
+@{
+    ViewData["Title"] = "Listado Pokemones";
+}
+
+<h1>Listado Pokemones</h1>
+
+<p>
+    <a href="@Url.Action("Create","Pokemones")" class="btn btn-primary">Crear Pokemon</a>
+</p>
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                Región
+            </th>
+            <th>
+                Tipo 1
+            </th>
+            <th>
+                Tipo 2
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr bgcolor="@item.RegionNavigation.CodigoRga">
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.RegionNavigation.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tipo1Navigation.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tipo2Navigation.Nombre)
+            </td>
+            <td>
+                <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Id">Detalles</a> |
+                <a class="btn btn-primary" asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

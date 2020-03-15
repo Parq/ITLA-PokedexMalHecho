@@ -1,0 +1,36 @@
+﻿@model IEnumerable<PokedexMalHecho.Models.Tipos>
+
+@{
+    ViewData["Title"] = "Listado Tipos";
+}
+
+<h1>Listado Tipos</h1>
+
+<p>
+    <a href="@Url.Action("Create","Tipos")" class="btn btn-primary">Nuevo Tipo</a>
+</p>
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

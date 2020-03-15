@@ -1,0 +1,33 @@
+﻿@model PokedexMalHecho.Models.Tipos
+
+@{
+    ViewData["Title"] = "Edición Tipos";
+}
+
+<h1>Editar Tipo</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label">Nombre:</label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <input type="submit" value="Guardar" class="btn btn-primary" /> |
+                    <a asp-action="Index">Volver a Listado</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

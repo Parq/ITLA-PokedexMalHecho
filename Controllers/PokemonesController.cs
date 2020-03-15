@@ -124,17 +124,31 @@ namespace PokedexMalHecho.Controllers
             {
                 return NotFound();
             }
-
+            
             var pokemones = await _context.Pokemones.FindAsync(id);
             if (pokemones == null)
             {
                 return NotFound();
             }
-            ViewData["Region"] = new SelectList(_context.Regiones, "Id", "Nombre", pokemones.Region);
+            /*ViewData["Region"] = new SelectList(_context.Regiones, "Id", "Nombre", pokemones.Region);
             ViewData["Tipo1"] = new SelectList(_context.Tipos, "Id", "Nombre", pokemones.Tipo1);
-            ViewData["Tipo2"] = new SelectList(_context.Tipos, "Id", "Nombre", pokemones.Tipo2);
+            ViewData["Tipo2"] = new SelectList(_context.Tipos, "Id", "Nombre", pokemones.Tipo2);*/
 
-            return View(pokemones);
+            var pokemonesDTO = new PokemonesDTO()
+            {
+                Id = pokemones.Id,
+                Nombre = pokemones.Nombre,
+                Region = pokemones.Region,
+                Tipo1 = pokemones.Tipo1,
+                Tipo2 = pokemones.Tipo2,
+                Ataque1 = pokemones.Ataque1,
+                Ataque2 = pokemones.Ataque2,
+                Ataque3 = pokemones.Ataque3,
+                Ataque4 = pokemones.Ataque4
+                //Photo=pokemones.Photo
+            };
+
+            return View(pokemonesDTO);
         }
 
         // POST: Pokemones/Edit/5
